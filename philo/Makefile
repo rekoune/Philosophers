@@ -1,23 +1,21 @@
-CC = cc
-CFLAGS = -Wall -Wextra -Werror  
-
-CFILES = philo.c utils.c routine.c
+CFILES = philo.c routine.c utils.c
 OFILES = $(CFILES:.c=.o)
+
+CFLAGS = -Wall -Werror -Wextra #-fsanitize=thread -g
+CC = cc
+
 NAME = philo
 
-all: $(NAME)
+all : $(NAME)
 
-$(NAME): $(OFILES)
+$(NAME) : $(OFILES) philo.h
 	$(CC) $(CFLAGS) $(OFILES) -o $(NAME)
+
 %.o:%.c
-	$(CC) $(CFLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) -c $< -o $@
 
-clean :
+clean: 
 	rm -rf $(OFILES)
-
-fclean : clean
+fclean: clean
 	rm -rf $(NAME)
 re: fclean all
-
-out: all
-	./philo 5 1000 200 100
