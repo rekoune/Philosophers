@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/23 14:30:13 by arekoune          #+#    #+#             */
+/*   Updated: 2024/07/23 20:41:58 by arekoune         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	thinking(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->mutex.check_death);
-	if (philo->data.is_dead == 1)
+	if (philo->data.is_dead == 1 || (philo->data.is_finish == philo->data.n_philo && philo->data.flag == 'y'))
 		return(0);
 	pthread_mutex_unlock(&philo->mutex.check_death);
 	pthread_mutex_lock(&philo->mutex.print);
@@ -15,8 +27,9 @@ int	thinking(t_philo *philo)
 int	eating(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->mutex.check_death);
-	if (philo->data.is_dead == 1)
+	if (philo->data.is_dead == 1 || (philo->data.is_finish == philo->data.n_philo && philo->data.flag == 'y'))
 		return(0);
+	philo->is_enough++;
 	pthread_mutex_unlock(&philo->mutex.check_death);
 	pthread_mutex_lock(&philo->mutex.meal_lock);
 	philo->last_meal = get_time();
@@ -33,7 +46,7 @@ int	eating(t_philo *philo)
 int	take_forks(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->mutex.check_death);
-	if (philo->data.is_dead == 1)
+	if (philo->data.is_dead == 1 || (philo->data.is_finish == philo->data.n_philo && philo->data.flag == 'y'))
 		return(0);
 	pthread_mutex_unlock(&philo->mutex.check_death);
 	pthread_mutex_lock(philo->left_fork);
@@ -52,7 +65,7 @@ int	take_forks(t_philo *philo)
 int	sleeping(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->mutex.check_death);
-	if (philo->data.is_dead == 1)
+	if (philo->data.is_dead == 1 || (philo->data.is_finish == philo->data.n_philo && philo->data.flag == 'y'))
 		return(0);
 	pthread_mutex_unlock(&philo->mutex.check_death);
 	pthread_mutex_lock(&philo->mutex.print);
@@ -71,6 +84,8 @@ void	*routine(void *argum)
 		sleeping(philo);
 	while(1)
 	{
+		pthread_mutex_lock(&philo->mutex.test);
+		pthread_mutex_unlock(&philo->mutex.test);
 		pthread_mutex_lock(&philo->mutex.check_death);
 		if (philo->data.is_dead == 1)
 			return(NULL);
@@ -80,6 +95,8 @@ void	*routine(void *argum)
 		if (!take_forks(philo))
 			return(NULL);
 		if (!sleeping(philo))
+			return(NULL);
+		if (philo->data.is_finish == philo->data.n_philo && philo->data.flag == 'y')
 			return(NULL);
 	}
 	return(NULL);

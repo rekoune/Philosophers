@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/23 14:30:01 by arekoune          #+#    #+#             */
+/*   Updated: 2024/07/23 20:39:33 by arekoune         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	checking_time(t_philo *philo)
@@ -10,6 +22,8 @@ int	checking_time(t_philo *philo)
 	{
 		if (i == philo->data.n_philo)
 			i = 0;
+		if (philo[i].is_enough == philo->data.n_meal)
+			philo->data.is_finish++;
 		pthread_mutex_lock(&philo[i].mutex.meal_lock);
 		last_meal = philo[i].last_meal;
 		pthread_mutex_unlock(&philo[i].mutex.meal_lock);
@@ -23,6 +37,12 @@ int	checking_time(t_philo *philo)
 			pthread_mutex_unlock(&philo[i].mutex.print);
 			return(0);
 		}
+		pthread_mutex_lock(&philo->mutex.check_death);
+		if (philo->data.is_finish == philo->data.n_philo && philo->data.flag == 'y')
+		{
+			return(1);
+		}
+		pthread_mutex_unlock(&philo->mutex.check_death);
 		i++;
 	}
 	return(1);
@@ -42,6 +62,7 @@ int	initial_mutexs(t_philo *philo)
 	pthread_mutex_init(&philo->mutex.print, NULL);
 	pthread_mutex_init(&philo->mutex.meal_lock, NULL);
 	pthread_mutex_init(&philo->mutex.check_death, NULL);
+	pthread_mutex_init(&philo->mutex.test, NULL);
 	i = 0;
 	while(i < philo->data.n_philo - 1)
 	{
@@ -72,11 +93,13 @@ int	get_data(t_philo *philo, int ac, char **av)
 	philo->data.tm_sleep = ft_atoi(av[4]);
 	if (philo->data.tm_sleep == -1)
 		return(0);
+	philo->data.flag = 'n';
 	if (ac == 6)
 	{
 		philo->data.n_meal = ft_atoi(av[5]);
 		if (philo->data.n_meal == -1)
 			return(0);
+		philo->data.flag = 'y';
 	}
 	philo->data.program_start = get_time();
 	philo->data.is_dead = 0;
@@ -93,7 +116,7 @@ int	creat_thread(t_philo *philo)
 		philo[i].data =  philo->data;
 		philo[i].mutex = philo->mutex;
 		philo[i].last_meal = philo->data.program_start;
-		i++;
+		philo[i++].is_enough = 0;
 	}
 	i = 0;
 	while(i < philo->data.n_philo)
@@ -131,5 +154,11 @@ int main (int ac , char **av)
 	}
 	if (!creat_thread(philo))
 		return(1);
+	if(philo->data.flag == 'y' && philo->data.is_finish >= philo->data.n_philo)
+	{
+		pthread_mutex_lock(&philo->mutex.print);
+		printf("All philosophers have eaten there meals\n");
+		pthread_mutex_unlock(&philo->mutex.print);
+	}
 	return(0);
 }

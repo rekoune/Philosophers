@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/23 14:30:10 by arekoune          #+#    #+#             */
+/*   Updated: 2024/07/23 19:23:45 by arekoune         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 #define PHILO_H
 
@@ -14,17 +26,21 @@ typedef struct s_data{
 	long	tm_sleep;
 	size_t	program_start;
 	int		is_dead;
+	long	is_finish;
 	long	n_meal;
+	char	flag;
 }			t_data;
 
 typedef struct s_mutex{
 	pthread_mutex_t print;
 	pthread_mutex_t meal_lock;
 	pthread_mutex_t check_death;
+	pthread_mutex_t test;
 }			t_mutex;
 
 typedef struct s_philo{
 	int				id;
+	long			is_enough;
 	t_data			data;
 	t_mutex			mutex;
 	size_t			last_meal;
