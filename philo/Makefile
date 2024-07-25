@@ -1,14 +1,14 @@
-CFILES = philo.c routine.c utils.c utils2.c
+CFILES = philosophers.c philo_routine.c utils.c utils2.c
 OFILES = $(CFILES:.c=.o)
 
-CFLAGS = -Wall -Werror -Wextra #-fsanitize=thread -g
+CFLAGS = -Wall -Werror -Wextra
 CC = cc
 
 NAME = philo
 
 all : $(NAME)
 
-$(NAME) : $(OFILES) philo.h
+$(NAME) : $(OFILES) philosophers.h
 	$(CC) $(CFLAGS) $(OFILES) -o $(NAME)
 
 %.o:%.c

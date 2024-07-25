@@ -6,11 +6,11 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:16 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 13:04:10 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:13:46 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philosophers.h"
 
 void	ft_sleep(long time, t_philo *philo)
 {

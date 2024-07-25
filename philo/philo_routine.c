@@ -6,11 +6,11 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:13 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 12:57:24 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:13:37 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philosophers.h"
 
 int	thinking(t_philo *philo)
 {

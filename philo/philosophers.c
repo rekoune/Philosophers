@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:01 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 13:23:54 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:13:29 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philosophers.h"
 
 void	checking_time(t_philo *philo)
 {
@@ -42,21 +42,20 @@ void	checking_time(t_philo *philo)
 
 int	initial_mutexs(t_philo *philo)
 {
-	pthread_mutex_t	*forks;
 	int				i;
 
 	i = 0;
-	forks = malloc(philo->data->n_philo * sizeof(pthread_mutex_t));
-	if (!forks)
+	philo->forks = malloc(philo->data->n_philo * sizeof(pthread_mutex_t));
+	if (!philo->forks)
 		return (0);
 	while (i < philo->data->n_philo)
-		pthread_mutex_init(&forks[i++], NULL);
+		pthread_mutex_init(&philo->forks[i++], NULL);
 	pthread_mutex_init(&philo->data->mutex.print, NULL);
 	pthread_mutex_init(&philo->data->mutex.meal_lock, NULL);
 	pthread_mutex_init(&philo->data->mutex.check_death, NULL);
 	pthread_mutex_init(&philo->data->mutex.enough, NULL);
 	pthread_mutex_init(&philo->data->mutex.finish, NULL);
-	asign_forks(philo, forks);
+	asign_forks(philo);
 	return (1);
 }
 
@@ -66,10 +65,11 @@ int	get_data(t_philo *philo, int ac, char **av)
 		return (error("Error : Invalid arguments\n"));
 	philo->data->n_philo = ft_atoi(av[1]);
 	philo->data->tm_die = ft_atoi(av[2]);
-	if (philo->data->tm_die == 0)
-		return (error("Error : Invalid arguments\n"));
 	philo->data->tm_eat = ft_atoi(av[3]);
 	philo->data->tm_sleep = ft_atoi(av[4]);
+	if (philo->data->tm_die == 0 || philo->data->tm_eat == 0 
+		|| philo->data->tm_sleep == 0)
+		return (error("Error : Invalid arguments\n"));
 	if (philo->data->n_philo == -1 || philo->data->tm_die == -1
 		|| philo->data->tm_eat == -1 || philo->data->tm_sleep == -1)
 		return (0);
@@ -124,18 +124,22 @@ int	main(int ac, char **av)
 	if (ft_atoi(av[1]) == -1)
 		return (1);
 	philo = malloc(ft_atoi(av[1]) * sizeof(t_philo));
-	philo->data = malloc(sizeof(t_data));
 	if (!philo)
-	{
-		printf("Error: malloc fails\n");
-		return (1);
-	}
+		return (malloc_fails(NULL));
+	philo->data = malloc(sizeof(t_data));
+	if (!philo->data)
+		return (malloc_fails(philo));
 	if (!get_data(philo, ac, av))
 	{
+		free(philo->data);
 		free(philo);
 		return (1);
 	}
 	if (!creat_thread(philo))
+	{
+		free_ressources(philo);
 		return (1);
+	}
+	free_ressources(philo);
 	return (0);
 }

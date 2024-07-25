@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:10 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 13:12:34 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:14:44 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILOSOPHERS_H
+# define PHILOSOPHERS_H
 
 # include <pthread.h>
 # include <stdio.h>
@@ -50,6 +50,7 @@ typedef struct s_philo
 	size_t			last_meal;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*forks;
 	pthread_t		thread;
 }					t_philo;
 
@@ -73,7 +74,10 @@ int					take_forks(t_philo *philo);
 int					sleeping(t_philo *philo);
 void				*routine(void *argum);
 
+// utils2.c
 int					check_death(t_philo *philo);
-void				asign_forks(t_philo *philo, pthread_mutex_t *forks);
+void				asign_forks(t_philo *philo);
+void				free_ressources(t_philo *philo);
+int					malloc_fails(t_philo *philo);
 
 #endif
