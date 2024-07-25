@@ -1,4 +1,4 @@
-CFILES = philo.c routine.c utils.c
+CFILES = philo.c routine.c utils.c utils2.c
 OFILES = $(CFILES:.c=.o)
 
 CFLAGS = -Wall -Werror -Wextra #-fsanitize=thread -g
