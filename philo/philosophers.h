@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:10 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 16:14:44 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/26 11:07:15 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef struct s_philo
 int					error(char *str);
 size_t				get_time(void);
 long				ft_atoi(char *str);
-void				ft_sleep(long time, t_philo *philo);
+int					ft_sleep(long time, t_philo *philo);
 int					ft_print(t_philo *philo, char *str);
 
 // philo.c

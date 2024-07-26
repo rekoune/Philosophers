@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   philo_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:13 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 16:13:37 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/26 11:17:05 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ int	eating(t_philo *philo)
 {
 	if (!check_death(philo))
 		return (0);
-	pthread_mutex_lock(&philo->data->mutex.meal_lock);
-	philo->last_meal = get_time();
-	pthread_mutex_unlock(&philo->data->mutex.meal_lock);
 	if (!ft_print(philo, "is eating\n"))
 		return (0);
 	ft_sleep(philo->data->tm_eat, philo);
+	pthread_mutex_lock(&philo->data->mutex.meal_lock);
+	philo->last_meal = get_time();
+	pthread_mutex_unlock(&philo->data->mutex.meal_lock);
 	pthread_mutex_lock(&philo->data->mutex.enough);
 	philo->is_enough++;
 	pthread_mutex_lock(&philo->data->mutex.finish);
@@ -66,7 +66,8 @@ int	sleeping(t_philo *philo)
 		return (0);
 	if (!ft_print(philo, "is sleeping\n"))
 		return (0);
-	ft_sleep(philo->data->tm_sleep, philo);
+	if (!ft_sleep(philo->data->tm_sleep, philo))
+		return (0);
 	return (1);
 }
 

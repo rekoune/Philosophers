@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:01 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 16:13:29 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/26 10:58:53 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	checking_time(t_philo *philo)
 	size_t	last_meal;
 
 	i = 0;
-	while (1)
+	while (check_death(philo))
 	{
 		if (i == philo->data->n_philo)
 			i = 0;
@@ -27,14 +27,12 @@ void	checking_time(t_philo *philo)
 		pthread_mutex_unlock(&philo[i].data->mutex.meal_lock);
 		if (get_time() > (last_meal + philo->data->tm_die))
 		{
-			ft_print(philo, "\033[1;31mdied\033[0m\n");
+			ft_print(philo, "died\n");
 			pthread_mutex_lock(&philo->data->mutex.check_death);
 			philo->data->is_dead = 1;
 			pthread_mutex_unlock(&philo->data->mutex.check_death);
 			return ;
 		}
-		if (!check_death(philo))
-			return ;
 		i++;
 	}
 	return ;
@@ -42,7 +40,7 @@ void	checking_time(t_philo *philo)
 
 int	initial_mutexs(t_philo *philo)
 {
-	int				i;
+	int	i;
 
 	i = 0;
 	philo->forks = malloc(philo->data->n_philo * sizeof(pthread_mutex_t));
@@ -67,7 +65,7 @@ int	get_data(t_philo *philo, int ac, char **av)
 	philo->data->tm_die = ft_atoi(av[2]);
 	philo->data->tm_eat = ft_atoi(av[3]);
 	philo->data->tm_sleep = ft_atoi(av[4]);
-	if (philo->data->tm_die == 0 || philo->data->tm_eat == 0 
+	if (philo->data->tm_die == 0 || philo->data->tm_eat == 0
 		|| philo->data->tm_sleep == 0)
 		return (error("Error : Invalid arguments\n"));
 	if (philo->data->n_philo == -1 || philo->data->tm_die == -1

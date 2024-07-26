@@ -6,24 +6,24 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:16 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 16:13:46 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/26 11:21:29 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	ft_sleep(long time, t_philo *philo)
+int	ft_sleep(long time, t_philo *philo)
 {
 	size_t	current_time;
 
-	(void)philo;
 	current_time = get_time();
-	while ((current_time + time) > get_time())
+	while ((current_time + time) >= get_time())
 	{
 		if (!check_death(philo))
-			return ;
+			return (0);
 		usleep(100);
 	}
+	return (1);
 }
 
 int	error(char *str)
