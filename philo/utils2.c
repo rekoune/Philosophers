@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 10:14:46 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/25 16:13:55 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/28 09:53:03 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int	check_death(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->data->mutex.check_death);
 	pthread_mutex_lock(&philo->data->mutex.finish);
-	if (philo->data->is_finish == philo->data->n_philo
-		&& philo->data->flag == 'y')
+	if (philo->data->flag == 'y'
+		&& philo->data->is_finish == philo->data->n_philo)
 	{
 		pthread_mutex_unlock(&philo->data->mutex.finish);
 		return (0);
@@ -57,7 +57,6 @@ void	free_ressources(t_philo *philo)
 
 	i = 0;
 	pthread_mutex_destroy(&philo->data->mutex.check_death);
-	pthread_mutex_destroy(&philo->data->mutex.enough);
 	pthread_mutex_destroy(&philo->data->mutex.finish);
 	pthread_mutex_destroy(&philo->data->mutex.meal_lock);
 	pthread_mutex_destroy(&philo->data->mutex.print);

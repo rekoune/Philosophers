@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:13 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/26 11:17:05 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/26 16:51:46 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,11 @@ int	eating(t_philo *philo)
 	pthread_mutex_lock(&philo->data->mutex.meal_lock);
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(&philo->data->mutex.meal_lock);
-	pthread_mutex_lock(&philo->data->mutex.enough);
 	philo->is_enough++;
 	pthread_mutex_lock(&philo->data->mutex.finish);
 	if (philo->is_enough == philo->data->n_meal)
 		philo->data->is_finish++;
 	pthread_mutex_unlock(&philo->data->mutex.finish);
-	pthread_mutex_unlock(&philo->data->mutex.enough);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
 	return (1);

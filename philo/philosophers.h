@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:10 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/26 11:07:15 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:16:37 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ typedef struct s_mutex
 	pthread_mutex_t	print;
 	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	check_death;
-	pthread_mutex_t	enough;
 	pthread_mutex_t	finish;
 }					t_mutex;
 

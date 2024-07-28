@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:01 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/26 10:58:53 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/28 10:21:24 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,13 @@ void	checking_time(t_philo *philo)
 		pthread_mutex_unlock(&philo[i].data->mutex.meal_lock);
 		if (get_time() > (last_meal + philo->data->tm_die))
 		{
-			ft_print(philo, "died\n");
 			pthread_mutex_lock(&philo->data->mutex.check_death);
 			philo->data->is_dead = 1;
 			pthread_mutex_unlock(&philo->data->mutex.check_death);
+			pthread_mutex_lock(&philo->data->mutex.print);
+			printf("%zu	%d died\n", get_time() - philo->data->program_start,
+				philo->id);
+			pthread_mutex_unlock(&philo->data->mutex.print);
 			return ;
 		}
 		i++;
@@ -51,7 +54,6 @@ int	initial_mutexs(t_philo *philo)
 	pthread_mutex_init(&philo->data->mutex.print, NULL);
 	pthread_mutex_init(&philo->data->mutex.meal_lock, NULL);
 	pthread_mutex_init(&philo->data->mutex.check_death, NULL);
-	pthread_mutex_init(&philo->data->mutex.enough, NULL);
 	pthread_mutex_init(&philo->data->mutex.finish, NULL);
 	asign_forks(philo);
 	return (1);
@@ -94,7 +96,6 @@ int	creat_thread(t_philo *philo)
 	while (i < philo->data->n_philo)
 	{
 		philo[i].data = philo->data;
-		philo[i].data->mutex = philo->data->mutex;
 		philo[i].last_meal = philo->data->program_start;
 		philo[i++].is_enough = 0;
 	}

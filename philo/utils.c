@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:16 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/26 11:21:29 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/07/28 10:20:50 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ int	ft_sleep(long time, t_philo *philo)
 	size_t	current_time;
 
 	current_time = get_time();
-	while ((current_time + time) >= get_time())
+	while ((current_time + time) > get_time())
 	{
 		if (!check_death(philo))
 			return (0);
-		usleep(100);
+		usleep(300);
 	}
 	return (1);
 }
@@ -42,11 +42,10 @@ size_t	get_time(void)
 
 int	ft_print(t_philo *philo, char *str)
 {
-	if (!check_death(philo))
-		return (0);
 	pthread_mutex_lock(&philo->data->mutex.print);
-	printf("%zu	%d %s", get_time() - philo->data->program_start, philo->id,
-		str);
+	if (check_death(philo))
+		printf("%zu	%d %s", get_time() - philo->data->program_start, philo->id,
+			str);
 	pthread_mutex_unlock(&philo->data->mutex.print);
 	return (1);
 }
