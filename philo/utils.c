@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:16 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/28 10:20:50 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/08/01 10:19:28 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ long	ft_atoi(char *str)
 		error("Error : Invalid arguments\n");
 		return (-1);
 	}
+	if (str[i] == '+')
+		i++;
 	while (str[i])
 	{
 		if (str[i] > '9' || str[i] < '0')

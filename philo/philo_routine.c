@@ -6,7 +6,7 @@
 /*   By: arekoune <arekoune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:30:13 by arekoune          #+#    #+#             */
-/*   Updated: 2024/07/26 16:51:46 by arekoune         ###   ########.fr       */
+/*   Updated: 2024/08/01 09:57:45 by arekoune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,17 @@ int	thinking(t_philo *philo)
 int	eating(t_philo *philo)
 {
 	if (!check_death(philo))
+	{
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
 		return (0);
+	}
 	if (!ft_print(philo, "is eating\n"))
+	{
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
 		return (0);
+	}
 	ft_sleep(philo->data->tm_eat, philo);
 	pthread_mutex_lock(&philo->data->mutex.meal_lock);
 	philo->last_meal = get_time();
@@ -47,12 +55,18 @@ int	take_forks(t_philo *philo)
 		return (0);
 	pthread_mutex_lock(philo->left_fork);
 	if (!ft_print(philo, "has taken a fork\n"))
+	{
+		pthread_mutex_unlock(philo->left_fork);
 		return (0);
+	}
 	if (!philo->right_fork)
 		return (0);
 	pthread_mutex_lock(philo->right_fork);
 	if (!ft_print(philo, "has taken a fork\n"))
+	{
+		pthread_mutex_unlock(philo->right_fork);
 		return (0);
+	}
 	if (!eating(philo))
 		return (0);
 	return (1);
